@@ -16,17 +16,17 @@ public class ZuiDaVodEntity extends BaseVodRegexEntity {
         this.setRuleResultList("<li><span class=\"tt\">.*?xing_vb.*?</li>");
         this.setRuleResultLink("<a href=\"(.*?)\"");
         this.setRuleResultTitle("target=\"_blank\">(.*?)</a>");
-        this.setRuleResultExtra1("<font .*?>(.*?)</font>");
-        this.setRuleResultExtra2("</td>[\\s\\S]*?<td align=\"center\">.*?</td>[\\s\\S]*?<td align=\"center\">(.*?)</td>");
+        this.setRuleResultExtra1("xing_vb.*?xing_vb.*?.*?xing_vb.*?\">(.*?)</span></li>");
+        this.setRuleResultExtra2("xing_vb.*?.*?xing_vb.*?\">(.*?)</span></li>");
         this.setNewBlockName(Arrays.asList("福利片","伦理片"));
 
-        this.setRuleDetailCover("<img src=\"(.*?)\" alt=[\\s\\S]*?/>");
-        this.setRuleDetailDesc("影片介绍开始代码-->([\\s\\S]*?)<\\!");
-        this.setRuleListShare("<h1>来源:kkyun[\\s\\S]*?</table>");
-        this.setRuleListM3U8("<h1>来源:kkm3u8[\\s\\S]*?</table>");
-        this.setRuleListDownList("<h1>来源:xunlei[\\s\\S]*?</table>");
-        this.setRuleList("<input.*?value=.*?checked.*?</a>");
-        this.setRuleListTitle("<a>(.*?)\\$");
-        this.setRuleListLink("\\$(.*?)</a>");
+        this.setRuleDetailCover("<img class=\"lazy\" src=\"(.*?)\" alt=[\\s\\S]*?/>");
+        this.setRuleDetailDesc("<span class=\"more\" txt=\"([\\s\\S]*?)</span>");
+        this.setRuleListShare("<div id=\"play_2\">[\\s\\S]*?</ul>");
+        this.setRuleListM3U8("<div id=\"play_1\">[\\s\\S]*?</ul>");
+        this.setRuleListDownList("<div id=\"down_1\">[\\s\\S]*?</ul>");
+        this.setRuleList("<li><input.*?value=.*?checked.*?</li>");
+        this.setRuleListTitle("/>(.*?)\\$");
+        this.setRuleListLink("\\$(.*?)</li>");
     }
 }
