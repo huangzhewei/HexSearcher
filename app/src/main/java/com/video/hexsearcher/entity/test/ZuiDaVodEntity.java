@@ -1,6 +1,7 @@
 package com.video.hexsearcher.entity.test;
 
-import com.video.hexsearcher.entity.vod.BaseVodRegexEntity;
+
+import com.walixiwa.vodhunter.vod.BaseVodRegexEntity;
 
 import java.util.Arrays;
 

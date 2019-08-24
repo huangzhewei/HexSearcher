@@ -6,12 +6,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.video.hexsearcher.entity.VodParser;
 import com.video.hexsearcher.entity.test.KuYunVodEntity;
-import com.video.hexsearcher.entity.test.OKVodEntity;
-import com.video.hexsearcher.entity.vod.BaseVodDetailEntity;
-import com.video.hexsearcher.entity.vod.BaseVodItemEntity;
-import com.video.hexsearcher.entity.vod.BaseVodRegexEntity;
+import com.walixiwa.vodhunter.tools.VodParser;
+import com.walixiwa.vodhunter.tools.VodSearcher;
+import com.walixiwa.vodhunter.vod.BaseVodDetailEntity;
+import com.walixiwa.vodhunter.vod.BaseVodItemEntity;
 import com.yanzhenjie.nohttp.NoHttp;
 
 import java.util.List;

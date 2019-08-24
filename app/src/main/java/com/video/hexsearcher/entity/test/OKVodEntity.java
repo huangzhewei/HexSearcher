@@ -1,6 +1,7 @@
 package com.video.hexsearcher.entity.test;
 
-import com.video.hexsearcher.entity.vod.BaseVodRegexEntity;
+
+import com.walixiwa.vodhunter.vod.BaseVodRegexEntity;
 
 import java.util.Arrays;
 
@@ -30,7 +31,7 @@ public class OKVodEntity extends BaseVodRegexEntity {
     }
 
     /**
-     * name : OK资源网
+     * name : OK
      * version : 20190823
      * requestCharset :
      * resultCharset :
@@ -50,6 +51,7 @@ public class OKVodEntity extends BaseVodRegexEntity {
      * rulelistM3U8 :
      * ruleListShare :
      * ruleListDownList :
+     * ruleList
      * ruleListTitle :
      * ruleListLink :
      * newNameJson : []
