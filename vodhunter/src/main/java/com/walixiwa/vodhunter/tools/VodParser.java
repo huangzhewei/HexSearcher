@@ -14,9 +14,15 @@ import com.yanzhenjie.nohttp.rest.CacheMode;
 import com.yanzhenjie.nohttp.rest.OnResponseListener;
 import com.yanzhenjie.nohttp.rest.Response;
 
+import java.io.IOException;
 import java.net.Proxy;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 public class VodParser {
     private BaseVodRegexEntity vodRegexEntity;
@@ -52,8 +58,34 @@ public class VodParser {
     }
 
     public void start() {
-        MyCharestRequest request = new MyCharestRequest(link);
-        request.setCharset(TextUtils.isEmpty(vodRegexEntity.getResultCharset()) ? "utf-8" : vodRegexEntity.getResultCharset());
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Request.Builder builder = new Request.Builder();
+        String userAgent = vodRegexEntity.getUserAgent();
+        if (!TextUtils.isEmpty(userAgent)) {
+            builder.removeHeader("User-Agent").addHeader("User-Agent", userAgent);
+        }
+        builder.url(link);
+
+        Call call = okHttpClient.newCall(builder.build());
+        //1.异步请求，通过接口回调告知用户 http 的异步执行结果
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                parse("");
+            }
+
+            @Override
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        String result = new String(response.body().bytes(), TextUtils.isEmpty(vodRegexEntity.getResultCharset()) ? "utf-8" : vodRegexEntity.getResultCharset());
+                        parse(result);
+                    }
+                }
+            }
+        });
+
+        /*MyCharestRequest request = new MyCharestRequest(link,vodRegexEntity.getResultCharset());
         request.setProxy(Proxy.NO_PROXY);
         request.setCacheMode(CacheMode.NONE_CACHE_REQUEST_NETWORK);
         if (!TextUtils.isEmpty(vodRegexEntity.getUserAgent())) {
@@ -84,7 +116,7 @@ public class VodParser {
             public void onFinish(int what) {
 
             }
-        });
+        });*/
     }
 
     private void parse(String html) {

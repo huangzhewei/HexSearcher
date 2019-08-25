@@ -17,7 +17,7 @@ public class ZuiDaVodEntity extends BaseVodRegexEntity {
         this.setRuleResultLink("<a href=\"(.*?)\"");
         this.setRuleResultTitle("target=\"_blank\">(.*?)</a>");
         this.setRuleResultExtra1("xing_vb.*?xing_vb.*?.*?xing_vb.*?\">(.*?)</span></li>");
-        this.setRuleResultExtra2("xing_vb.*?.*?xing_vb.*?\">(.*?)</span></li>");
+        this.setRuleResultExtra2("xing_vb.*?.*?xing_vb.*?\">(.*?)</span>");
         this.setNewBlockName(Arrays.asList("福利片","伦理片"));
 
         this.setRuleDetailCover("<img class=\"lazy\" src=\"(.*?)\" alt=[\\s\\S]*?/>");

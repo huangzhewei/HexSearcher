@@ -18,7 +18,7 @@ public class KuYunVodEntity extends BaseVodRegexEntity {
         this.setRuleResultList("this\\.className='row1'[\\s\\S]*?</font></td>");
         this.setRuleResultLink("<a href=\"(.*?)\"");
         this.setRuleResultTitle("target=\"_blank\">(.*?)</a>");
-        this.setRuleResultExtra1("<font .*?>(.*?)</font>");
+        this.setRuleResultExtra1("(\\d{4}-\\d{2}-\\d{2})");
         this.setRuleResultExtra2("</td>[\\s\\S]*?<td align=\"center\">.*?</td>[\\s\\S]*?<td align=\"center\">(.*?)</td>");
         this.setNewBlockName(Arrays.asList("福利片","伦理片"));
 

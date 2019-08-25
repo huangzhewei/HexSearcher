@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.video.hexsearcher.entity.test.A131VodEntity;
+import com.video.hexsearcher.entity.test.A172VodEntity;
 import com.video.hexsearcher.entity.test.KuYunVodEntity;
 import com.video.hexsearcher.entity.test.OKVodEntity;
 import com.video.hexsearcher.entity.test.ZuiDaVodEntity;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void test(View v) {
-        ZuiDaVodEntity okVodEntity = new ZuiDaVodEntity();
+        A131VodEntity okVodEntity = new A131VodEntity();
         Log.e("entity", "json: " + okVodEntity.toJsonString());
         Log.e("entity", "linker: " + okVodEntity.toBase64Linker().replaceAll("\n", "").trim());
         key.setText(okVodEntity.toBase64Linker().replaceAll("\n", "").trim());
@@ -60,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void parse(View view) {
-        ZuiDaVodEntity okVodEntity = new ZuiDaVodEntity();
-        new VodParser().init(okVodEntity).with("http://www.zuidazy1.net/?m=vod-detail-id-62835.html").setCallBack(new VodParser.OnParseFinishListener() {
+        A131VodEntity okVodEntity = new A131VodEntity();
+        new VodParser().init(okVodEntity).with("http://131zy.vip/?m=vod-detail-id-29811.html").setCallBack(new VodParser.OnParseFinishListener() {
             @Override
             public void onParseFinish(BaseVodDetailEntity vodDetailEntity) {
                 Log.e("result", vodDetailEntity.toString());

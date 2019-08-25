@@ -1,6 +1,8 @@
 package com.walixiwa.vodhunter.vod;
 
-public class BaseVodPlayEntity {
+import java.io.Serializable;
+
+public class BaseVodPlayEntity  implements Serializable {
     private String title;
     private String link;
 

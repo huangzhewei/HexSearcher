@@ -59,4 +59,5 @@ public class MutiRequest {
     public void cancelAll() {
         requestQueue.cancelAll();
     }
+
 }

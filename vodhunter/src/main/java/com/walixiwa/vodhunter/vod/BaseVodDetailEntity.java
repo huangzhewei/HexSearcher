@@ -2,10 +2,11 @@ package com.walixiwa.vodhunter.vod;
 
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseVodDetailEntity {
+public class BaseVodDetailEntity implements Serializable {
     private String cover;
     private String desc;
     private List<BaseVodPlayEntity> m3u8List = new ArrayList<>();

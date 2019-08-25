@@ -8,10 +8,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseVodRegexEntity {
+public class BaseVodRegexEntity implements Serializable {
     private String name = "";
     private String version = "";
     private String requestCharset = "";
@@ -32,7 +33,7 @@ public class BaseVodRegexEntity {
     private String ruleListM3U8 = "";
     private String ruleListShare = "";
     private String ruleListDownList = "";
-    private String ruleList="";
+    private String ruleList = "";
     private String ruleListTitle = "";
     private String ruleListLink = "";
     private List<String> newNameJson = new ArrayList<>();
