@@ -10,9 +10,6 @@ import androidx.annotation.NonNull;
 import com.walixiwa.vodhunter.vod.BaseVodDetailEntity;
 import com.walixiwa.vodhunter.vod.BaseVodPlayEntity;
 import com.walixiwa.vodhunter.vod.BaseVodRegexEntity;
-import com.yanzhenjie.nohttp.rest.CacheMode;
-import com.yanzhenjie.nohttp.rest.OnResponseListener;
-import com.yanzhenjie.nohttp.rest.Response;
 
 import java.io.IOException;
 import java.net.Proxy;
@@ -58,71 +55,24 @@ public class VodParser {
     }
 
     public void start() {
-        OkHttpClient okHttpClient = new OkHttpClient();
-        Request.Builder builder = new Request.Builder();
-        String userAgent = vodRegexEntity.getUserAgent();
-        if (!TextUtils.isEmpty(userAgent)) {
-            builder.removeHeader("User-Agent").addHeader("User-Agent", userAgent);
-        }
-        builder.url(link);
-
-        Call call = okHttpClient.newCall(builder.build());
-        //1.异步请求，通过接口回调告知用户 http 的异步执行结果
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                parse("");
-            }
-
-            @Override
-            public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        String result = new String(response.body().bytes(), TextUtils.isEmpty(vodRegexEntity.getResultCharset()) ? "utf-8" : vodRegexEntity.getResultCharset());
-                        parse(result);
-                    }
-                }
-            }
-        });
-
-        /*MyCharestRequest request = new MyCharestRequest(link,vodRegexEntity.getResultCharset());
-        request.setProxy(Proxy.NO_PROXY);
-        request.setCacheMode(CacheMode.NONE_CACHE_REQUEST_NETWORK);
-        if (!TextUtils.isEmpty(vodRegexEntity.getUserAgent())) {
-            request.setUserAgent(vodRegexEntity.getUserAgent());
-        }
-        MutiRequest.getInstance().add(link.hashCode(), request, new OnResponseListener<String>() {
-            @Override
-            public void onStart(int what) {
-
-            }
-
-            @Override
-            public void onSucceed(int what, final Response<String> response) {
-                new Thread(new Runnable() {
+        new MutiRequest()
+                .setUrl(link)
+                .setCharset(vodRegexEntity.getResultCharset())
+                .setUserAgent(vodRegexEntity.getUserAgent())
+                .setCallBack(new MutiRequest.OnRequestFinishListener() {
                     @Override
-                    public void run() {
-                        parse(response.get());
+                    public void onRequestFinish(boolean status, String response) {
+                        parse(response);
                     }
-                }).start();
-            }
-
-            @Override
-            public void onFailed(int what, final Response<String> response) {
-                parse("");
-            }
-
-            @Override
-            public void onFinish(int what) {
-
-            }
-        });*/
+                })
+                .start();
     }
 
     private void parse(String html) {
         if (!TextUtils.isEmpty(html)) {
             if (!TextUtils.isEmpty(vodRegexEntity.getRuleDetailCover())) {
-                baseVodDetailEntity.setCover(matchString(html, vodRegexEntity.getRuleDetailCover()));
+                String coverHeader = TextUtils.isEmpty(vodRegexEntity.getRuleDetailCoverHeader()) ? "" : vodRegexEntity.getRuleDetailCoverHeader();
+                baseVodDetailEntity.setCover(coverHeader + matchString(html, vodRegexEntity.getRuleDetailCover()));
             }
             if (!TextUtils.isEmpty(vodRegexEntity.getRuleDetailDesc())) {
                 baseVodDetailEntity.setDesc(matchString(html, vodRegexEntity.getRuleDetailDesc()));
@@ -197,6 +147,6 @@ public class VodParser {
         while (matcher.find()) {
             result = matcher.group(1);
         }
-        return result == null ? "" : result.replaceAll("<.*?>", "").trim();
+        return result == null ? "" : result.replaceAll("<.*?>", "").replaceAll("\\s","").trim();
     }
 }

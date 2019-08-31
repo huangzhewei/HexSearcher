@@ -12,11 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.video.hexsearcher.entity.test.A131VodEntity;
-import com.video.hexsearcher.entity.test.A172VodEntity;
-import com.video.hexsearcher.entity.test.KuYunVodEntity;
-import com.video.hexsearcher.entity.test.OKVodEntity;
-import com.video.hexsearcher.entity.test.ZuiDaVodEntity;
+import com.video.hexsearcher.entity.test.HDVodEntity;
 import com.walixiwa.vodhunter.tools.VodParser;
 import com.walixiwa.vodhunter.tools.VodSearcher;
 import com.walixiwa.vodhunter.vod.BaseVodDetailEntity;
@@ -27,12 +23,14 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private TextView key;
+    private EditText keyWords;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         NoHttp.initialize(this);
+        keyWords=findViewById(R.id.keyWords);
         key = findViewById(R.id.key);
         key.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,23 +45,30 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void test(View v) {
-        A131VodEntity okVodEntity = new A131VodEntity();
+        HDVodEntity okVodEntity = new HDVodEntity();
+        //生成json
         Log.e("entity", "json: " + okVodEntity.toJsonString());
+        //生成链接
         Log.e("entity", "linker: " + okVodEntity.toBase64Linker().replaceAll("\n", "").trim());
         key.setText(okVodEntity.toBase64Linker().replaceAll("\n", "").trim());
-        new VodSearcher().init(okVodEntity).with("钢铁侠", 1).setCallBack(new VodSearcher.OnRequestFinishListener() {
-            @Override
-            public void onRequestFinish(List<BaseVodItemEntity> baseVodItemEntities) {
-                for (BaseVodItemEntity baseVodItemEntity : baseVodItemEntities) {
-                    Log.e("result", "onRequestFinish: " + baseVodItemEntity.toString());
-                }
-            }
-        }).start();
+
+        new VodSearcher()
+                .init(okVodEntity)
+                .with(keyWords.getText().toString(), 1)
+                .setCallBack(new VodSearcher.OnRequestFinishListener() {
+                    @Override
+                    public void onRequestFinish(List<BaseVodItemEntity> baseVodItemEntities) {
+                        for (BaseVodItemEntity baseVodItemEntity : baseVodItemEntities) {
+                            Log.e("result", "onRequestFinish: " + baseVodItemEntity.toString());
+                        }
+                    }
+                })
+                .start();
     }
 
     public void parse(View view) {
-        A131VodEntity okVodEntity = new A131VodEntity();
-        new VodParser().init(okVodEntity).with("http://131zy.vip/?m=vod-detail-id-29811.html").setCallBack(new VodParser.OnParseFinishListener() {
+        HDVodEntity okVodEntity = new HDVodEntity();
+        new VodParser().init(okVodEntity).with("http://www.gaoqingzy.com/?m=vod-detail-id-31499.html").setCallBack(new VodParser.OnParseFinishListener() {
             @Override
             public void onParseFinish(BaseVodDetailEntity vodDetailEntity) {
                 Log.e("result", vodDetailEntity.toString());

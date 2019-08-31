@@ -22,7 +22,7 @@ public class ZuiDaVodEntity extends BaseVodRegexEntity {
 
         this.setRuleDetailCover("<img class=\"lazy\" src=\"(.*?)\" alt=[\\s\\S]*?/>");
         this.setRuleDetailDesc("<span class=\"more\" txt=\"([\\s\\S]*?)</span>");
-        this.setRuleListShare("<div id=\"play_2\">[\\s\\S]*?</ul>");
+        //this.setRuleListShare("<div id=\"play_2\">[\\s\\S]*?</ul>");
         this.setRuleListM3U8("<div id=\"play_1\">[\\s\\S]*?</ul>");
         this.setRuleListDownList("<div id=\"down_1\">[\\s\\S]*?</ul>");
         this.setRuleList("<li><input.*?value=.*?checked.*?</li>");

@@ -10,24 +10,14 @@ import androidx.annotation.NonNull;
 
 import com.walixiwa.vodhunter.vod.BaseVodItemEntity;
 import com.walixiwa.vodhunter.vod.BaseVodRegexEntity;
-import com.yanzhenjie.nohttp.NoHttp;
-import com.yanzhenjie.nohttp.rest.CacheMode;
-import com.yanzhenjie.nohttp.rest.OnResponseListener;
-import com.yanzhenjie.nohttp.rest.Response;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.Proxy;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 
 public class VodSearcher {
     private BaseVodRegexEntity vodRegexEntity;
@@ -68,62 +58,17 @@ public class VodSearcher {
         String searchKey = TextUtils.isEmpty(vodRegexEntity.getRequestCharset()) ? urlEncode(keyWords, "utf-8") : urlEncode(keyWords, vodRegexEntity.getRequestCharset());
         String url = vodRegexEntity.getSearchUrl().replace("%keyWords", searchKey).replace("%page", Integer.toString(page));
         Log.e("charset", "start: " + vodRegexEntity.getResultCharset());
-        OkHttpClient okHttpClient = new OkHttpClient();
-        Request.Builder builder = new Request.Builder();
-        if (!TextUtils.isEmpty(vodRegexEntity.getUserAgent())) {
-            builder.removeHeader("User-Agent").addHeader("User-Agent", vodRegexEntity.getUserAgent());
-        }
-        builder.url(url);
-        Call call = okHttpClient.newCall(builder.build());
-        //1.异步请求，通过接口回调告知用户 http 的异步执行结果
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                parse("");
-            }
-
-            @Override
-            public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        String result = new String(response.body().bytes(), TextUtils.isEmpty(vodRegexEntity.getResultCharset()) ? "utf-8" : vodRegexEntity.getResultCharset());
-                        parse(result);
-                    }
-                }
-            }
-        });
-        /*MyCharestRequest request = new MyCharestRequest(url, vodRegexEntity.getResultCharset());
-        request.setProxy(Proxy.NO_PROXY);
-        request.setCacheMode(CacheMode.NONE_CACHE_REQUEST_NETWORK);
-        if (!TextUtils.isEmpty(vodRegexEntity.getUserAgent())) {
-            request.setUserAgent(vodRegexEntity.getUserAgent());
-        }
-        MutiRequest.getInstance().add(url.hashCode(), request, new OnResponseListener<String>() {
-            @Override
-            public void onStart(int what) {
-
-            }
-
-            @Override
-            public void onSucceed(int what, final Response<String> response) {
-                new Thread(new Runnable() {
+        new MutiRequest()
+                .setUrl(url)
+                .setCharset(vodRegexEntity.getResultCharset())
+                .setUserAgent(vodRegexEntity.getUserAgent())
+                .setCallBack(new MutiRequest.OnRequestFinishListener() {
                     @Override
-                    public void run() {
-                        parse(response.get());
+                    public void onRequestFinish(boolean status, String response) {
+                        parse(response);
                     }
-                }).start();
-            }
-
-            @Override
-            public void onFailed(int what, final Response<String> response) {
-                parse("");
-            }
-
-            @Override
-            public void onFinish(int what) {
-
-            }
-        });*/
+                })
+                .start();
     }
 
     private void parse(String html) {
@@ -187,7 +132,7 @@ public class VodSearcher {
         while (matcher.find()) {
             result = matcher.group(1);
         }
-        return result == null ? "" : result.replaceAll("<.*?>", "").trim();
+        return result == null ? "" : result.replaceAll("<.*?>", "").replaceAll("\\s","").trim();
     }
 
     /**

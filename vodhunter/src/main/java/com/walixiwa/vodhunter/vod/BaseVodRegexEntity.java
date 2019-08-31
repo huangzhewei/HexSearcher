@@ -1,8 +1,10 @@
 package com.walixiwa.vodhunter.vod;
 
+import android.text.TextUtils;
 import android.util.Base64;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,6 +12,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class BaseVodRegexEntity implements Serializable {
@@ -28,6 +31,7 @@ public class BaseVodRegexEntity implements Serializable {
     private String ruleResultExtra2 = "";
     private String ruleResultExtra3 = "";
     private String ruleResultExtra4 = "";
+    private String ruleDetailCoverHeader = "";
     private String ruleDetailCover = "";
     private String ruleDetailDesc = "";
     private String ruleListM3U8 = "";
@@ -160,6 +164,14 @@ public class BaseVodRegexEntity implements Serializable {
         this.ruleResultExtra4 = ruleResultExtra4;
     }
 
+    public String getRuleDetailCoverHeader() {
+        return ruleDetailCoverHeader;
+    }
+
+    public void setRuleDetailCoverHeader(String ruleDetailCoverHeader) {
+        this.ruleDetailCoverHeader = ruleDetailCoverHeader;
+    }
+
     public String getRuleDetailCover() {
         return ruleDetailCover;
     }
@@ -250,38 +262,46 @@ public class BaseVodRegexEntity implements Serializable {
 
     public String toJsonString() {
         JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("name", name);
-            jsonObject.put("version", version);
-            jsonObject.put("baseUrl", baseUrl);
-            jsonObject.put("searchUrl", searchUrl);
-            jsonObject.put("requestCharset", requestCharset);
-            jsonObject.put("resultCharset", resultCharset);
-            jsonObject.put("userAgent", userAgent);
-            jsonObject.put("resultLinkHeader", resultLinkHeader);
-            jsonObject.put("ruleResultList", ruleResultList);
-            jsonObject.put("ruleResultTitle", ruleResultTitle);
-            jsonObject.put("ruleResultLink", ruleResultLink);
-            jsonObject.put("ruleResultExtra1", ruleResultExtra1);
-            jsonObject.put("ruleResultExtra2", ruleResultExtra2);
-            jsonObject.put("ruleResultExtra3", ruleResultExtra3);
-            jsonObject.put("ruleResultExtra4", ruleResultExtra4);
-            jsonObject.put("ruleDetailCover", ruleDetailCover);
-            jsonObject.put("ruleDetailDesc", ruleDetailDesc);
-            jsonObject.put("ruleListM3U8", ruleListM3U8);
-            jsonObject.put("ruleListShare", ruleListShare);
-            jsonObject.put("ruleListDownList", ruleListDownList);
-            jsonObject.put("ruleList", ruleList);
-            jsonObject.put("ruleListTitle", ruleListTitle);
-            jsonObject.put("ruleListLink", ruleListLink);
-            jsonObject.put("newNameJson", new JSONArray(newLinkJson));
-            jsonObject.put("newLinkJson", new JSONArray(newLinkJson));
-            jsonObject.put("newBlockName", new JSONArray(newBlockName));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        putJSONObject(jsonObject, "name", name);
+        putJSONObject(jsonObject, "version", version);
+        putJSONObject(jsonObject, "baseUrl", baseUrl);
+        putJSONObject(jsonObject, "searchUrl", searchUrl);
+        putJSONObject(jsonObject, "requestCharset", requestCharset);
+        putJSONObject(jsonObject, "resultCharset", resultCharset);
+        putJSONObject(jsonObject, "userAgent", userAgent);
+        putJSONObject(jsonObject, "resultLinkHeader", resultLinkHeader);
+        putJSONObject(jsonObject, "ruleResultList", ruleResultList);
+        putJSONObject(jsonObject, "ruleResultTitle", ruleResultTitle);
+        putJSONObject(jsonObject, "ruleResultLink", ruleResultLink);
+        putJSONObject(jsonObject, "ruleResultExtra1", ruleResultExtra1);
+        putJSONObject(jsonObject, "ruleResultExtra2", ruleResultExtra2);
+        putJSONObject(jsonObject, "ruleResultExtra3", ruleResultExtra3);
+        putJSONObject(jsonObject, "ruleResultExtra4", ruleResultExtra4);
+        putJSONObject(jsonObject, "ruleDetailCoverHeader", ruleDetailCoverHeader);
+        putJSONObject(jsonObject, "ruleDetailCover", ruleDetailCover);
+        putJSONObject(jsonObject, "ruleDetailDesc", ruleDetailDesc);
+        putJSONObject(jsonObject, "ruleListM3U8", ruleListM3U8);
+        putJSONObject(jsonObject, "ruleListShare", ruleListShare);
+        putJSONObject(jsonObject, "ruleListDownList", ruleListDownList);
+        putJSONObject(jsonObject, "ruleList", ruleList);
+        putJSONObject(jsonObject, "ruleListTitle", ruleListTitle);
+        putJSONObject(jsonObject, "ruleListLink", ruleListLink);
+        putJSONObject(jsonObject, "newNameJson", new JSONArray(newLinkJson));
+        putJSONObject(jsonObject, "newLinkJson", new JSONArray(newLinkJson));
+        putJSONObject(jsonObject, "newBlockName", new JSONArray(newBlockName));
         return jsonObject.toString();
     }
+
+    private void putJSONObject(JSONObject jsonObject, String key, Object value) {
+        if (value != null && !value.equals("")) {
+            try {
+                jsonObject.put(key, value);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     public String toGsonString() {
         Gson gson = new Gson();
@@ -296,34 +316,59 @@ public class BaseVodRegexEntity implements Serializable {
         linker = new String(Base64.decode(linker.getBytes(), Base64.DEFAULT));
         try {
             JSONObject jsonObject = new JSONObject(linker);
-            name = jsonObject.getString("name");
-            version = jsonObject.getString("version");
-            baseUrl = jsonObject.getString("baseUrl");
-            searchUrl = jsonObject.getString("searchUrl");
-            requestCharset = jsonObject.getString("requestCharset");
-            resultCharset = jsonObject.getString("resultCharset");
-            userAgent = jsonObject.getString("userAgent");
-            resultLinkHeader = jsonObject.getString("resultLinkHeader");
-            ruleResultList = jsonObject.getString("ruleResultList");
-            ruleResultTitle = jsonObject.getString("ruleResultTitle");
-            ruleResultLink = jsonObject.getString("ruleResultLink");
-            ruleResultExtra1 = jsonObject.getString("ruleResultExtra1");
-            ruleResultExtra2 = jsonObject.getString("ruleResultExtra2");
-            ruleResultExtra3 = jsonObject.getString("ruleResultExtra3");
-            ruleResultExtra4 = jsonObject.getString("ruleResultExtra4");
-            ruleDetailCover = jsonObject.getString("ruleDetailCover");
-            ruleDetailDesc = jsonObject.getString("ruleDetailDesc");
-            ruleListM3U8 = jsonObject.getString("ruleListM3U8");
-            ruleListShare = jsonObject.getString("ruleListShare");
-            ruleListDownList = jsonObject.getString("ruleListDownList");
-            ruleList = jsonObject.getString("ruleList");
-            ruleListTitle = jsonObject.getString("ruleListTitle");
-            ruleListLink = jsonObject.getString("ruleListLink");
-            newNameJson = jsonArrayToList(jsonObject.getJSONArray("newNameJson"));
-            newLinkJson = jsonArrayToList(jsonObject.getJSONArray("newLinkJson"));
-            newBlockName = jsonArrayToList(jsonObject.getJSONArray("newBlockName"));
+            name = getString(jsonObject, "name");
+            version = getString(jsonObject, "version");
+            baseUrl = getString(jsonObject, "baseUrl");
+            searchUrl = getString(jsonObject, "searchUrl");
+            requestCharset = getString(jsonObject, "requestCharset");
+            resultCharset = getString(jsonObject, "resultCharset");
+            userAgent = getString(jsonObject, "userAgent");
+            resultLinkHeader = getString(jsonObject, "resultLinkHeader");
+            ruleResultList = getString(jsonObject, "ruleResultList");
+            ruleResultTitle = getString(jsonObject, "ruleResultTitle");
+            ruleResultLink = getString(jsonObject, "ruleResultLink");
+            ruleResultExtra1 = getString(jsonObject, "ruleResultExtra1");
+            ruleResultExtra2 = getString(jsonObject, "ruleResultExtra2");
+            ruleResultExtra3 = getString(jsonObject, "ruleResultExtra3");
+            ruleResultExtra4 = getString(jsonObject, "ruleResultExtra4");
+            ruleDetailCoverHeader = getString(jsonObject, "ruleDetailCoverHeader");
+            ruleDetailCover = getString(jsonObject, "ruleDetailCover");
+            ruleDetailDesc = getString(jsonObject, "ruleDetailDesc");
+            ruleListM3U8 = getString(jsonObject, "ruleListM3U8");
+            ruleListShare = getString(jsonObject, "ruleListShare");
+            ruleListDownList = getString(jsonObject, "ruleListDownList");
+            ruleList = getString(jsonObject, "ruleList");
+            ruleListTitle = getString(jsonObject, "ruleListTitle");
+            ruleListLink = getString(jsonObject, "ruleListLink");
+            newNameJson = jsonArrayToList(getJSONArray(jsonObject, "newNameJson"));
+            newLinkJson = jsonArrayToList(getJSONArray(jsonObject, "newLinkJson"));
+            newBlockName = jsonArrayToList(getJSONArray(jsonObject, "newBlockName"));
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    private String getString(JSONObject jsonObject, String key) {
+        if (jsonObject.has(key)) {
+            try {
+                return jsonObject.getString(key);
+            } catch (JSONException e) {
+                return "";
+            }
+        } else {
+            return "";
+        }
+    }
+
+    private JSONArray getJSONArray(JSONObject jsonObject, String key) {
+        if (jsonObject.has(key)) {
+            try {
+                return jsonObject.getJSONArray(key);
+            } catch (JSONException e) {
+                return new JSONArray();
+            }
+        } else {
+            return new JSONArray();
         }
     }
 

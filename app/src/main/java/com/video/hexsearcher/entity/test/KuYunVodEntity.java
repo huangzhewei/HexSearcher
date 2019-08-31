@@ -24,7 +24,7 @@ public class KuYunVodEntity extends BaseVodRegexEntity {
 
         this.setRuleDetailCover("<img src=\"(.*?)\" alt=[\\s\\S]*?/>");
         this.setRuleDetailDesc("影片介绍开始代码-->([\\s\\S]*?)<\\!");
-        this.setRuleListShare("<h1>来源:kkyun[\\s\\S]*?</table>");
+        //this.setRuleListShare("<h1>来源:kkyun[\\s\\S]*?</table>");
         this.setRuleListM3U8("<h1>来源:kkm3u8[\\s\\S]*?</table>");
         this.setRuleListDownList("<h1>来源:xunlei[\\s\\S]*?</table>");
         this.setRuleList("<input.*?value=.*?checked.*?</a>");

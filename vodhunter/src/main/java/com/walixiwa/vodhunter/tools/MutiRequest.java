@@ -1,63 +1,96 @@
 package com.walixiwa.vodhunter.tools;
 
-import com.yanzhenjie.nohttp.NoHttp;
-import com.yanzhenjie.nohttp.rest.OnResponseListener;
-import com.yanzhenjie.nohttp.rest.Request;
-import com.yanzhenjie.nohttp.rest.RequestQueue;
+import android.os.Handler;
+import android.text.TextUtils;
+import android.util.Log;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.ResponseBody;
 
 /**
  * 多线程网络请求队列
  */
 public class MutiRequest {
+    private String url;
+    private String userAgent;
+    private String charset;
+    private Long timeOut = 10L;
+    private OnRequestFinishListener onRequestFinishListener;
 
-    private static MutiRequest instance;
 
-    /**
-     * 请求队列。
-     */
-    private RequestQueue requestQueue;
-
-    private MutiRequest() {
-        requestQueue = NoHttp.newRequestQueue(10);
+    public MutiRequest setUrl(String url) {
+        this.url = url;
+        Log.e("info", "setUrl: " + url);
+        return this;
     }
 
-    /**
-     * 请求队列。
-     */
-    public static MutiRequest getInstance() {
-        if (instance == null)
-            synchronized (MutiRequest.class) {
-                if (instance == null)
-                    instance = new MutiRequest();
+    public MutiRequest setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+        return this;
+    }
+
+    public MutiRequest setCharset(String charset) {
+        this.charset = charset;
+        return this;
+    }
+
+    public MutiRequest setCallBack(OnRequestFinishListener onRequestFinishListener) {
+        this.onRequestFinishListener = onRequestFinishListener;
+        return this;
+    }
+
+    public MutiRequest setTimeOut(long timeOut) {
+        this.timeOut = timeOut;
+        return this;
+    }
+
+    public void start() {
+        OkHttpClient.Builder okHttpClient = new OkHttpClient().newBuilder();
+        Request.Builder builder = new Request.Builder();
+        if (!TextUtils.isEmpty(userAgent)) {
+            builder.removeHeader("User-Agent").addHeader("User-Agent", userAgent);
+        }
+        builder.url(url);
+        okHttpClient.connectTimeout(timeOut, TimeUnit.SECONDS);
+        okHttpClient.readTimeout(timeOut, TimeUnit.SECONDS);
+        Call call = okHttpClient.build().newCall(builder.build());
+
+        //1.异步请求，通过接口回调告知用户 http 的异步执行结果
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if (onRequestFinishListener != null) {
+                    onRequestFinishListener.onRequestFinish(false, "");
+                }
             }
-        return instance;
+
+            @Override
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    ResponseBody responseBody = response.body();
+                    if (responseBody != null) {
+                        byte[] bytes = responseBody.bytes();
+                        String result = new String(bytes, TextUtils.isEmpty(charset) ? "utf-8" : charset);
+                        if (onRequestFinishListener != null) {
+                            onRequestFinishListener.onRequestFinish(false, result);
+                        }
+                    }
+                } else {
+                    if (onRequestFinishListener != null) {
+                        onRequestFinishListener.onRequestFinish(false, "");
+                    }
+                }
+            }
+        });
     }
 
-    /**
-     * 添加一个请求到请求队列。
-     *
-     * @param what     用来标志请求, 当多个请求使用同一个Listener时, 在回调方法中会返回这个what。
-     * @param request  请求对象。
-     * @param listener 结果回调对象。
-     */
-    public <T> void add(int what, Request<T> request, OnResponseListener listener) {
-        requestQueue.add(what, request, listener);
+    public interface OnRequestFinishListener {
+        void onRequestFinish(boolean status, String response);
     }
-
-    /**
-     * 取消这个sign标记的所有请求。
-     *
-     * @param sign 请求的取消标志。
-     */
-    public void cancelBySign(Object sign) {
-        requestQueue.cancelBySign(sign);
-    }
-
-    /**
-     * 取消队列中所有请求。
-     */
-    public void cancelAll() {
-        requestQueue.cancelAll();
-    }
-
 }

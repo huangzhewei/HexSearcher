@@ -10,7 +10,7 @@ public class OKVodEntity extends BaseVodRegexEntity {
         this.setName("OK资源网");
         this.setVersion("20190824");
         this.setBaseUrl("http://www.okzyw.com");
-        this.setSearchUrl("https://www.okzyw.com/index.php?m=vod-search-pg-%page-wd-%keyWords.html");
+        this.setSearchUrl("http://www.okzyw.com/index.php?m=vod-search-pg-%page-wd-%keyWords.html");
 
         this.setResultLinkHeader("http://www.okzyw.com");
         this.setRuleResultList("<li>.*?xing_vb4.*?</li>");
@@ -22,40 +22,11 @@ public class OKVodEntity extends BaseVodRegexEntity {
 
         this.setRuleDetailCover("<div class=\"vodImg\">[\\s\\S]*?src=\"(.*?)\"");
         this.setRuleDetailDesc("<span class=\"more\" txt=\"([\\s\\S]*?)</span>");
-        this.setRuleListShare("<div id=\"1\">[\\s\\S]*?</ul>");
+        //this.setRuleListShare("<div id=\"1\">[\\s\\S]*?</ul>");
         this.setRuleListM3U8("<div id=\"2\">[\\s\\S]*?</ul>");
         this.setRuleListDownList("<div id=\"down_1\">[\\s\\S]*?</ul>");
         this.setRuleList("name=\"copy_sel\" value=[\\s\\S]*?</li>");
         this.setRuleListTitle("/>(.*?)\\$");
         this.setRuleListLink("\\$(.*?)</li>");
     }
-
-    /**
-     * name : OK
-     * version : 20190823
-     * requestCharset :
-     * resultCharset :
-     * userAgent :
-     * baseUrl :
-     * searchUrl :
-     * resultLinkHeader :
-     * ruleResultList :
-     * ruleResultLink :
-     * ruleResultTitle :
-     * ruleResultExtra1 :
-     * ruleResultExtra2 :
-     * ruleResultExtra3 :
-     * ruleResultExtra4 :
-     * ruleDetailCover :
-     * ruleDetailDesc :
-     * rulelistM3U8 :
-     * ruleListShare :
-     * ruleListDownList :
-     * ruleList
-     * ruleListTitle :
-     * ruleListLink :
-     * newNameJson : []
-     * newLinkJson : []
-     * newBlockName : []
-     */
 }
