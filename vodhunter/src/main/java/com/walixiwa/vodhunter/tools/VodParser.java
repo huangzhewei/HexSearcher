@@ -5,21 +5,17 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
 
 import com.walixiwa.vodhunter.vod.BaseVodDetailEntity;
 import com.walixiwa.vodhunter.vod.BaseVodPlayEntity;
 import com.walixiwa.vodhunter.vod.BaseVodRegexEntity;
 
-import java.io.IOException;
-import java.net.Proxy;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
+
 
 public class VodParser {
     private BaseVodRegexEntity vodRegexEntity;
@@ -29,7 +25,7 @@ public class VodParser {
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
-        public void handleMessage(@NonNull Message msg) {
+        public void handleMessage(@NotNull Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
                 if (null != onParseFinishListener) {

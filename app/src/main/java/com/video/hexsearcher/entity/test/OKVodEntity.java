@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class OKVodEntity extends BaseVodRegexEntity {
     public OKVodEntity(){
         this.setName("OK资源网");
-        this.setVersion("20190824");
+        this.setVersion("20190902");
         this.setBaseUrl("http://www.okzyw.com");
         this.setSearchUrl("http://www.okzyw.com/index.php?m=vod-search-pg-%page-wd-%keyWords.html");
 
@@ -23,8 +23,8 @@ public class OKVodEntity extends BaseVodRegexEntity {
         this.setRuleDetailCover("<div class=\"vodImg\">[\\s\\S]*?src=\"(.*?)\"");
         this.setRuleDetailDesc("<span class=\"more\" txt=\"([\\s\\S]*?)</span>");
         //this.setRuleListShare("<div id=\"1\">[\\s\\S]*?</ul>");
-        this.setRuleListM3U8("<div id=\"2\">[\\s\\S]*?</ul>");
-        this.setRuleListDownList("<div id=\"down_1\">[\\s\\S]*?</ul>");
+        this.setRuleListM3U8("suf\">ckm3u8[\\s\\S]*?</ul>");
+        this.setRuleListDownList("suf\">迅雷下载[\\s\\S]*?</ul>");
         this.setRuleList("name=\"copy_sel\" value=[\\s\\S]*?</li>");
         this.setRuleListTitle("/>(.*?)\\$");
         this.setRuleListLink("\\$(.*?)</li>");

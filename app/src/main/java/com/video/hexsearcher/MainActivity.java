@@ -13,8 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.video.hexsearcher.entity.test.HDVodEntity;
+import com.video.hexsearcher.entity.test.MagVodEntity;
+import com.video.hexsearcher.entity.test.OKVodEntity;
+import com.walixiwa.vodhunter.tools.MagSearcher;
 import com.walixiwa.vodhunter.tools.VodParser;
 import com.walixiwa.vodhunter.tools.VodSearcher;
+import com.walixiwa.vodhunter.vod.BaseMagItemEntity;
 import com.walixiwa.vodhunter.vod.BaseVodDetailEntity;
 import com.walixiwa.vodhunter.vod.BaseVodItemEntity;
 import com.yanzhenjie.nohttp.NoHttp;
@@ -45,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void test(View v) {
-        HDVodEntity okVodEntity = new HDVodEntity();
+        /*OKVodEntity okVodEntity = new OKVodEntity();
         //生成json
         Log.e("entity", "json: " + okVodEntity.toJsonString());
         //生成链接
@@ -63,12 +67,24 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 })
-                .start();
+                .start();*/
+
+        MagVodEntity magVodEntity = new MagVodEntity();
+        Log.e("entity", "linker: " + magVodEntity.toBase64Linker().replaceAll("\n", "").trim());
+        key.setText(magVodEntity.toBase64Linker().replaceAll("\n", "").trim());
+        new MagSearcher().init(magVodEntity).with("猎场",1).setCallBack(new MagSearcher.OnRequestFinishListener() {
+            @Override
+            public void onRequestFinish(List<BaseMagItemEntity> baseVodItemEntities) {
+                for (BaseMagItemEntity baseVodItemEntity : baseVodItemEntities) {
+                    Log.e("result", "onRequestFinish: " + baseVodItemEntity.toString());
+                }
+            }
+        }).start();
     }
 
     public void parse(View view) {
-        HDVodEntity okVodEntity = new HDVodEntity();
-        new VodParser().init(okVodEntity).with("http://www.gaoqingzy.com/?m=vod-detail-id-31499.html").setCallBack(new VodParser.OnParseFinishListener() {
+        OKVodEntity okVodEntity = new OKVodEntity();
+        new VodParser().init(okVodEntity).with("http://www.okzyw.com/?m=vod-detail-id-38622.html").setCallBack(new VodParser.OnParseFinishListener() {
             @Override
             public void onParseFinish(BaseVodDetailEntity vodDetailEntity) {
                 Log.e("result", vodDetailEntity.toString());

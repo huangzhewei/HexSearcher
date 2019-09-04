@@ -6,10 +6,12 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
+
 
 import com.walixiwa.vodhunter.vod.BaseVodItemEntity;
 import com.walixiwa.vodhunter.vod.BaseVodRegexEntity;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -28,7 +30,7 @@ public class VodSearcher {
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
-        public void handleMessage(@NonNull Message msg) {
+        public void handleMessage(@NotNull Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
                 if (null != onRequestFinishListener) {
