@@ -79,6 +79,7 @@ public class MagSearcher {
             Matcher matcher = pattern.matcher(html);
             while (matcher.find()) {
                 String resultList = matcher.group(); //匹配整条链接结果
+                //Log.e("parse", "parse: "+resultList+"\n\n-------------------------------------");
                 String resultLinkHeader = magRegxEntity.getResultLinkHeader();
                 String resultLink;
                 if (TextUtils.isEmpty(resultLinkHeader)) {

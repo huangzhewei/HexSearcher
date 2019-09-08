@@ -31,4 +31,5 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.1.0'
     //谷歌快速json支持库
     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'org.jsoup:jsoup:1.12.1'
 }

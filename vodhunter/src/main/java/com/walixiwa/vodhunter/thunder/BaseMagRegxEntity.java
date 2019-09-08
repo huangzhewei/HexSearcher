@@ -6,10 +6,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseMagRegxEntity {
+public class BaseMagRegxEntity implements Serializable {
     private String name = "";
     private String version = "";
     private String requestCharset = "";
@@ -29,7 +30,9 @@ public class BaseMagRegxEntity {
     private boolean isSecondPage = false;
 
     private String ruleDetailLinkHeader = "";
+    private String ruleDetailList = "";
     private String ruleDetailLink = "";
+    private String ruleDetailTitle = "";
 
     private List<String> replaceWords = new ArrayList<>();
 
@@ -177,6 +180,22 @@ public class BaseMagRegxEntity {
         this.ruleDetailLinkHeader = ruleDetailLinkHeader;
     }
 
+    public String getRuleDetailList() {
+        return ruleDetailList;
+    }
+
+    public void setRuleDetailList(String ruleDetailList) {
+        this.ruleDetailList = ruleDetailList;
+    }
+
+    public String getRuleDetailTitle() {
+        return ruleDetailTitle;
+    }
+
+    public void setRuleDetailTitle(String ruleDetailTitle) {
+        this.ruleDetailTitle = ruleDetailTitle;
+    }
+
     public List<String> getReplaceWords() {
         return replaceWords;
     }
@@ -202,6 +221,8 @@ public class BaseMagRegxEntity {
         putJSONObject(jsonObject, "ruleResultExtra2", ruleResultExtra2);
         putJSONObject(jsonObject, "ruleResultExtra3", ruleResultExtra3);
         putJSONObject(jsonObject, "ruleResultExtra4", ruleResultExtra4);
+        putJSONObject(jsonObject, "ruleDetailList", ruleDetailList);
+        putJSONObject(jsonObject, "ruleDetailTitle", ruleDetailTitle);
         putJSONObject(jsonObject, "ruleDetailLink", ruleDetailLink);
         putJSONObject(jsonObject, "ruleDetailLinkHeader", ruleDetailLinkHeader);
         putJSONObject(jsonObject, "isSecondPage", isSecondPage);
@@ -245,6 +266,8 @@ public class BaseMagRegxEntity {
             if (jsonObject.has("isSecondPage")) {
                 isSecondPage = jsonObject.getBoolean("isSecondPage");
             }
+            ruleDetailList = getString(jsonObject, "ruleDetailList");
+            ruleDetailTitle = getString(jsonObject, "ruleDetailTitle");
             ruleDetailLink = getString(jsonObject, "ruleDetailLink");
             ruleDetailLinkHeader = getString(jsonObject, "ruleDetailLinkHeader");
             replaceWords = jsonArrayToList(getJSONArray(jsonObject,"replaceWords"));
