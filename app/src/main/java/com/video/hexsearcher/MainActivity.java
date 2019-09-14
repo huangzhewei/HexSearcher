@@ -15,9 +15,13 @@ import android.widget.Toast;
 
 import com.video.hexsearcher.entity.test.A156VodEntity;
 import com.video.hexsearcher.entity.test.HaKuVodEntity;
+import com.video.hexsearcher.entity.test.MaHuaVodEntity;
 import com.video.hexsearcher.entity.test.OKVodEntity;
 import com.video.hexsearcher.entity.thunder.DyttEntity;
+import com.video.hexsearcher.entity.thunder.KanTianTangEntity;
+import com.video.hexsearcher.entity.thunder.MeiJuBaEntity;
 import com.video.hexsearcher.entity.thunder.PiaoHuaEntity;
+import com.video.hexsearcher.entity.thunder.QiQiPuEntity;
 import com.walixiwa.vodhunter.thunder.BaseMagDetailEntity;
 import com.walixiwa.vodhunter.tools.MagParser;
 import com.walixiwa.vodhunter.tools.MagSearcher;
@@ -55,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void test(View v) {
-       /* HaKuVodEntity okVodEntity = new HaKuVodEntity();
+        MaHuaVodEntity okVodEntity = new MaHuaVodEntity();
         //生成json
         Log.e("entity", "json: " + okVodEntity.toJsonString());
         //生成链接
@@ -73,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 })
-                .start();*/
+                .start();
 
-        DyttEntity magVodEntity = new DyttEntity();
+        /*QiQiPuEntity magVodEntity = new QiQiPuEntity();
         Log.e("entity", "linker: " + magVodEntity.toBase64Linker().replaceAll("\n", "").trim());
         key.setText(magVodEntity.toBase64Linker().replaceAll("\n", "").trim());
         new MagSearcher().init(magVodEntity).with(keyWords.getText().toString(), 1).setCallBack(new MagSearcher.OnRequestFinishListener() {
@@ -85,21 +89,21 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("result", "onRequestFinish: " + baseVodItemEntity.toString());
                 }
             }
-        }).start();
+        }).start();*/
     }
 
     public void parse(View view) {
-        /*HaKuVodEntity okVodEntity = new HaKuVodEntity();
-        new VodParser().init(okVodEntity).with("http://www.666zy.com/?m=vod-detail-id-30493.html").setCallBack(new VodParser.OnParseFinishListener() {
+        MaHuaVodEntity okVodEntity = new MaHuaVodEntity();
+        new VodParser().init(okVodEntity).with("http://mahuazy.net/?m=vod-detail-id-11874.html").setCallBack(new VodParser.OnParseFinishListener() {
             @Override
             public void onParseFinish(BaseVodDetailEntity vodDetailEntity) {
                 Log.e("result", vodDetailEntity.toString());
             }
-        }).start();*/
-        DyttEntity magVodEntity = new DyttEntity();
+        }).start();
+       /* QiQiPuEntity magVodEntity = new QiQiPuEntity();
         new MagParser()
                 .init(magVodEntity)
-                .with("http://walixiwa.club:455/curl/c.php?url=https://www.ygdy8.com/html/gndy/jddy/20190623/58756.html")
+                .with("http://www.qiqipu.tv/dy/khp/15029/")
                 .setCallBack(new MagParser.OnParseFinishListener() {
                     @Override
                     public void onParseFinish(List<BaseMagDetailEntity> links) {
@@ -109,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 })
-                .start();
+                .start();*/
 
     }
 }
