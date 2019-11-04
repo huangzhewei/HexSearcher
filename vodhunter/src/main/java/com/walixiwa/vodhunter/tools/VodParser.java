@@ -75,11 +75,11 @@ public class VodParser {
             }
 
             if (!TextUtils.isEmpty(vodRegexEntity.getRuleListM3U8())) {
-                Pattern pattern = Pattern.compile(vodRegexEntity.getRuleListM3U8());
+                Pattern pattern = Pattern.compile(vodRegexEntity.getRuleListM3U8(),Pattern.CASE_INSENSITIVE);
                 Matcher matcher = pattern.matcher(html);
                 while (matcher.find()) {
                     String result = matcher.group();
-                    Pattern linkPattern = Pattern.compile(vodRegexEntity.getRuleList());
+                    Pattern linkPattern = Pattern.compile(vodRegexEntity.getRuleList(),Pattern.CASE_INSENSITIVE);
                     Matcher linkMatcher = linkPattern.matcher(result);
                     while (linkMatcher.find()) {
                         String find = linkMatcher.group();
@@ -91,11 +91,11 @@ public class VodParser {
             }
 
             if (!TextUtils.isEmpty(vodRegexEntity.getRuleListShare())) {
-                Pattern pattern = Pattern.compile(vodRegexEntity.getRuleListShare());
+                Pattern pattern = Pattern.compile(vodRegexEntity.getRuleListShare(),Pattern.CASE_INSENSITIVE);
                 Matcher matcher = pattern.matcher(html);
                 while (matcher.find()) {
                     String result = matcher.group();
-                    Pattern linkPattern = Pattern.compile(vodRegexEntity.getRuleList());
+                    Pattern linkPattern = Pattern.compile(vodRegexEntity.getRuleList(),Pattern.CASE_INSENSITIVE);
                     Matcher linkMatcher = linkPattern.matcher(result);
                     while (linkMatcher.find()) {
                         String find = linkMatcher.group();
@@ -107,11 +107,11 @@ public class VodParser {
             }
 
             if (!TextUtils.isEmpty(vodRegexEntity.getRuleListDownList())) {
-                Pattern pattern = Pattern.compile(vodRegexEntity.getRuleListDownList());
+                Pattern pattern = Pattern.compile(vodRegexEntity.getRuleListDownList(),Pattern.CASE_INSENSITIVE);
                 Matcher matcher = pattern.matcher(html);
                 while (matcher.find()) {
                     String result = matcher.group();
-                    Pattern linkPattern = Pattern.compile(vodRegexEntity.getRuleList());
+                    Pattern linkPattern = Pattern.compile(vodRegexEntity.getRuleList(),Pattern.CASE_INSENSITIVE);
                     Matcher linkMatcher = linkPattern.matcher(result);
                     while (linkMatcher.find()) {
                         String find = linkMatcher.group();
@@ -138,11 +138,11 @@ public class VodParser {
      */
     private String matchString(String value, String regx) {
         String result = "";
-        Pattern pattern = Pattern.compile(regx);
+        Pattern pattern = Pattern.compile(regx,Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(value);
         while (matcher.find()) {
             result = matcher.group(1);
         }
-        return result == null ? "" : result.replaceAll("<.*?>", "").replaceAll("\\s","").trim();
+        return NativeDecoder.decode(result == null ? "" : result.replaceAll("<.*?>", "").replaceAll("\\s","").trim());
     }
 }

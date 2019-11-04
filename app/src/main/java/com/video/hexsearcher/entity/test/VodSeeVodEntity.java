@@ -7,11 +7,11 @@ import java.util.Arrays;
 
 public class VodSeeVodEntity extends BaseVodRegexEntity {
     public VodSeeVodEntity() {
-        this.setName("卧龙影视");
-        this.setVersion("20190831");
-        this.setBaseUrl("https://www.vodsee.com");
-        this.setSearchUrl("https://www.vodsee.com/search.html?page=%page&searchword=%keyWords&searchtype=-1");
-        this.setResultLinkHeader("https://www.vodsee.com");
+        this.setName("卧龙资源网");
+        this.setVersion("20191001");
+        this.setBaseUrl("https://wolongzy.net");
+        this.setSearchUrl("https://wolongzy.net/search.html?page=%page&searchword=%keyWords&searchtype=-1");
+        this.setResultLinkHeader("https://wolongzy.net");
 
         this.setRuleResultList("<a class=\"videoName\"[\\s\\S]*?</li>");
         this.setRuleResultLink("href=\"(.*?)\"");

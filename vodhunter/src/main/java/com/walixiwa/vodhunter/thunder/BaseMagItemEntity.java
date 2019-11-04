@@ -1,4 +1,4 @@
-package com.walixiwa.vodhunter.vod;
+package com.walixiwa.vodhunter.thunder;
 
 import com.walixiwa.vodhunter.thunder.BaseMagRegxEntity;
 

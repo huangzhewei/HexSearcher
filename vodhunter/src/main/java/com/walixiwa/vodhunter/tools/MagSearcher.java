@@ -7,9 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.walixiwa.vodhunter.thunder.BaseMagRegxEntity;
-import com.walixiwa.vodhunter.vod.BaseMagItemEntity;
-import com.walixiwa.vodhunter.vod.BaseVodItemEntity;
-import com.walixiwa.vodhunter.vod.BaseVodRegexEntity;
+import com.walixiwa.vodhunter.thunder.BaseMagItemEntity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -26,6 +24,7 @@ public class MagSearcher {
     private List<BaseMagItemEntity> vodItemEntityList = new ArrayList<>();
     private String keyWords;
     private int page;
+    private List<String> blockWords = new ArrayList<>();
     private OnRequestFinishListener onRequestFinishListener;
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
@@ -51,6 +50,12 @@ public class MagSearcher {
         return this;
     }
 
+
+    public MagSearcher setBlockWords(List<String> blockWords) {
+        this.blockWords.addAll(blockWords);
+        return this;
+    }
+
     public MagSearcher setCallBack(OnRequestFinishListener onRequestFinishListener) {
         this.onRequestFinishListener = onRequestFinishListener;
         return this;
@@ -59,7 +64,6 @@ public class MagSearcher {
     public void start() {
         String searchKey = TextUtils.isEmpty(magRegxEntity.getRequestCharset()) ? urlEncode(keyWords, "utf-8") : urlEncode(keyWords, magRegxEntity.getRequestCharset());
         String url = magRegxEntity.getSearchUrl().replace("%keyWords", searchKey).replace("%page", Integer.toString(page));
-        Log.e("charset", "start: " + magRegxEntity.getResultCharset());
         new MutiRequest()
                 .setUrl(url)
                 .setCharset(magRegxEntity.getResultCharset())
@@ -75,36 +79,45 @@ public class MagSearcher {
 
     private void parse(String html) {
         if (!TextUtils.isEmpty(html)) {
-            Pattern pattern = Pattern.compile(magRegxEntity.getRuleResultList());//匹配整条链接
+            Pattern pattern = Pattern.compile(magRegxEntity.getRuleResultList(), Pattern.CASE_INSENSITIVE);//匹配整条链接
             Matcher matcher = pattern.matcher(html);
             while (matcher.find()) {
                 String resultList = matcher.group(); //匹配整条链接结果
-                //Log.e("parse", "parse: "+resultList+"\n\n-------------------------------------");
-                String resultLinkHeader = magRegxEntity.getResultLinkHeader();
-                String resultLink;
-                if (TextUtils.isEmpty(resultLinkHeader)) {
-                    resultLink = matchString(resultList, magRegxEntity.getRuleResultLink());
-                } else {
-                    resultLink = resultLinkHeader + matchString(resultList, magRegxEntity.getRuleResultLink());
+                boolean isBlock = false;
+                for (int i = 0; i < blockWords.size(); i++) {
+                    if (resultList.contains(blockWords.get(i))) {
+                        isBlock = true;
+                        break;
+                    }
                 }
-                String resultTitle = matchString(resultList, magRegxEntity.getRuleResultTitle());
-                for (int i = 0; i < magRegxEntity.getReplaceWords().size(); i++) {
-                    resultTitle = resultTitle.replaceAll(magRegxEntity.getReplaceWords().get(i), "");
+                if (!isBlock) {
+                    String resultLinkHeader = magRegxEntity.getResultLinkHeader();
+                    String resultLink;
+                    if (TextUtils.isEmpty(resultLinkHeader)) {
+                        resultLink = matchString(resultList, magRegxEntity.getRuleResultLink());
+                    } else {
+                        resultLink = resultLinkHeader + matchString(resultList, magRegxEntity.getRuleResultLink());
+                    }
+                    String resultTitle = matchString(resultList, magRegxEntity.getRuleResultTitle());
+                    for (int i = 0; i < magRegxEntity.getReplaceWords().size(); i++) {
+                        resultTitle = resultTitle.replaceAll(magRegxEntity.getReplaceWords().get(i), "");
+                    }
+                    String extra1 = TextUtils.isEmpty(magRegxEntity.getRuleResultExtra1()) ? "" : matchString(resultList, magRegxEntity.getRuleResultExtra1());
+                    String extra2 = TextUtils.isEmpty(magRegxEntity.getRuleResultExtra2()) ? "" : matchString(resultList, magRegxEntity.getRuleResultExtra2());
+                    String extra3 = TextUtils.isEmpty(magRegxEntity.getRuleResultExtra3()) ? "" : matchString(resultList, magRegxEntity.getRuleResultExtra3());
+                    String extra4 = TextUtils.isEmpty(magRegxEntity.getRuleResultExtra4()) ? "" : matchString(resultList, magRegxEntity.getRuleResultExtra4());
+                    BaseMagItemEntity vodItemEntity = new BaseMagItemEntity();
+                    vodItemEntity.setResultTitle(resultTitle);
+                    vodItemEntity.setResultLink(resultLink);
+                    vodItemEntity.setResultExtra1(extra1);
+                    vodItemEntity.setResultExtra2(extra2);
+                    vodItemEntity.setResultExtra3(extra3);
+                    vodItemEntity.setResultExtra4(extra4);
+                    vodItemEntity.setBaseMagRegxEntity(magRegxEntity);
+                    if (!vodItemEntityList.contains(vodItemEntity)) {
+                        vodItemEntityList.add(vodItemEntity);
+                    }
                 }
-                String extra1 = TextUtils.isEmpty(magRegxEntity.getRuleResultExtra1()) ? "" : matchString(resultList, magRegxEntity.getRuleResultExtra1());
-                String extra2 = TextUtils.isEmpty(magRegxEntity.getRuleResultExtra2()) ? "" : matchString(resultList, magRegxEntity.getRuleResultExtra2());
-                String extra3 = TextUtils.isEmpty(magRegxEntity.getRuleResultExtra3()) ? "" : matchString(resultList, magRegxEntity.getRuleResultExtra3());
-                String extra4 = TextUtils.isEmpty(magRegxEntity.getRuleResultExtra4()) ? "" : matchString(resultList, magRegxEntity.getRuleResultExtra4());
-                BaseMagItemEntity vodItemEntity = new BaseMagItemEntity();
-                vodItemEntity.setResultTitle(resultTitle);
-                vodItemEntity.setResultLink(resultLink);
-                vodItemEntity.setResultExtra1(extra1);
-                vodItemEntity.setResultExtra2(extra2);
-                vodItemEntity.setResultExtra3(extra3);
-                vodItemEntity.setResultExtra4(extra4);
-                vodItemEntity.setBaseMagRegxEntity(magRegxEntity);
-                vodItemEntityList.add(vodItemEntity);
-
             }
         }
         handler.sendEmptyMessage(1);
@@ -118,17 +131,17 @@ public class MagSearcher {
      * 根据单个正则规则，默认返回第一个匹配项
      *
      * @param value
-     * @param regx
+     * @param regex
      * @return
      */
-    private String matchString(String value, String regx) {
+    private String matchString(String value, String regex) {
         String result = "";
-        Pattern pattern = Pattern.compile(regx);
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(value);
         while (matcher.find()) {
             result = matcher.group(1);
         }
-        return result == null ? "" : result.replaceAll("<.*?>", "").replaceAll("\\s", "").trim();
+        return NativeDecoder.decode(result == null ? "" : result.replaceAll("<.*?>", "").replaceAll("\\s", "").trim());
     }
 
     /**

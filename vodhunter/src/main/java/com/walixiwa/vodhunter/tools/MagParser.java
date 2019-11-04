@@ -71,7 +71,7 @@ public class MagParser {
     private void parse(String html) {
         //Log.e("parse", "parse: " + html);
         if (!TextUtils.isEmpty(html)) {
-            Pattern pattern = Pattern.compile(vodRegexEntity.getRuleDetailList());
+            Pattern pattern = Pattern.compile(vodRegexEntity.getRuleDetailList(), Pattern.CASE_INSENSITIVE);
             Matcher matcher = pattern.matcher(html);
             while (matcher.find()) {
                 String result = matcher.group();
@@ -84,9 +84,9 @@ public class MagParser {
                 }
                 if (!TextUtils.isEmpty(vodRegexEntity.getRuleDetailLink())) {
                     String link = matchString(result, vodRegexEntity.getRuleDetailLink());
-                    link = TextUtils.isEmpty(vodRegexEntity.getRuleDetailLinkHeader()) ? link : link;
+                    link = TextUtils.isEmpty(vodRegexEntity.getRuleDetailLinkHeader()) ? link : vodRegexEntity.getRuleDetailLinkHeader() + link;
                     magDetailEntity.setLink(link);
-                    if(!checker.contains(link)){
+                    if (!checker.contains(link)) {
                         checker.add(link);
                         magDetailEntities.add(magDetailEntity);
                     }
@@ -110,12 +110,12 @@ public class MagParser {
      */
     private String matchString(String value, String regx) {
         String result = "";
-        Pattern pattern = Pattern.compile(regx);
+        Pattern pattern = Pattern.compile(regx, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(value);
         while (matcher.find()) {
             result = matcher.group(1);
         }
-        return result == null ? "" : result.replaceAll("<.*?>", "").replaceAll("\\s", "").trim();
+        return NativeDecoder.decode(result == null ? "" : result.replaceAll("<.*?>", "").replaceAll("\\s", "").trim());
     }
 
 }

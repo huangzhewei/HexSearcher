@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 
-
 import com.walixiwa.vodhunter.vod.BaseVodItemEntity;
 import com.walixiwa.vodhunter.vod.BaseVodRegexEntity;
 
@@ -26,6 +25,7 @@ public class VodSearcher {
     private List<BaseVodItemEntity> vodItemEntityList = new ArrayList<>();
     private String keyWords;
     private int page;
+    private List<String> newBlockName = new ArrayList<>();
     private OnRequestFinishListener onRequestFinishListener;
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
@@ -56,6 +56,11 @@ public class VodSearcher {
         return this;
     }
 
+    public VodSearcher setNewBlockName(List<String> newBlockName) {
+        this.newBlockName.addAll(newBlockName);
+        return this;
+    }
+
     public void start() {
         String searchKey = TextUtils.isEmpty(vodRegexEntity.getRequestCharset()) ? urlEncode(keyWords, "utf-8") : urlEncode(keyWords, vodRegexEntity.getRequestCharset());
         String url = vodRegexEntity.getSearchUrl().replace("%keyWords", searchKey).replace("%page", Integer.toString(page));
@@ -75,7 +80,7 @@ public class VodSearcher {
 
     private void parse(String html) {
         if (!TextUtils.isEmpty(html)) {
-            Pattern pattern = Pattern.compile(vodRegexEntity.getRuleResultList());//匹配整条链接
+            Pattern pattern = Pattern.compile(vodRegexEntity.getRuleResultList(),Pattern.CASE_INSENSITIVE);//匹配整条链接
             Matcher matcher = pattern.matcher(html);
             while (matcher.find()) {
                 String resultList = matcher.group(); //匹配整条链接结果
@@ -86,6 +91,11 @@ public class VodSearcher {
                         if (resultList.contains(name)) {
                             blocked = true;
                         }
+                    }
+                }
+                for (String name : newBlockName) {
+                    if (resultList.contains(name)) {
+                        blocked = true;
                     }
                 }
                 if (!blocked) {
@@ -129,12 +139,12 @@ public class VodSearcher {
      */
     private String matchString(String value, String regx) {
         String result = "";
-        Pattern pattern = Pattern.compile(regx);
+        Pattern pattern = Pattern.compile(regx,Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(value);
         while (matcher.find()) {
             result = matcher.group(1);
         }
-        return result == null ? "" : result.replaceAll("<.*?>", "").replaceAll("\\s","").trim();
+        return NativeDecoder.decode(result == null ? "" : result.replaceAll("<.*?>", "").replaceAll("\\s", "").trim());
     }
 
     /**

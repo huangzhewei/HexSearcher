@@ -6,8 +6,8 @@ import com.walixiwa.vodhunter.vod.BaseVodRegexEntity;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class HDVodEntity extends BaseVodRegexEntity {
-    public HDVodEntity(){
+public class GaoQingVodEntity extends BaseVodRegexEntity {
+    public GaoQingVodEntity(){
         this.setName("高清资源网");
         this.setVersion("20190831");
         this.setBaseUrl("http://www.gaoqingzy.com");
